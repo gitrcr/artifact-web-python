@@ -1,0 +1,6 @@
+__pycache__/
+.git/
+venv/
+compose.yaml
+.vscode/
+.DS_Store
