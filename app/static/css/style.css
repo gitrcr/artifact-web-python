@@ -1,0 +1,19 @@
+body {
+    background-color: rgb(128, 240, 221);
+    font-family: Tahoma;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    position: absolute;
+    top: 2cm;
+    left: 2cm;
+}
+
+p {
+    position: absolute;
+    top: 4cm;
+    left: 2cm;
+}  

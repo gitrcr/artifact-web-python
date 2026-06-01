@@ -1,0 +1,102 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Terraform NewProyect",
+			"type": "shell",
+			"command": "terraform fmt && terraform init && terraform validate && terraform apply -auto-approve && terraform output -raw admin_password",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"close": false
+			}
+		},
+		{
+			"label": "Terraform Init",
+			"type": "shell",
+			"command": "terraform init",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Terraform Plan",
+			"type": "shell",
+			"command": "terraform plan",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Terraform Apply",
+			"type": "shell",
+			"command": "terraform apply",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Terraform Validate",
+			"type": "shell",
+			"command": "terraform validate",
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "Terraform Format Check",
+			"type": "shell",
+			"command": "terraform fmt -check -recursive",
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"platform": "python",
+			"dockerBuild": {
+				"tag": "pyweb:latest",
+				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build"
+			],
+			"dockerRun": {
+				"env": {
+					"FLASK_APP": "app\\app.py"
+				}
+			},
+			"python": {
+				"args": [
+					"run",
+					"--no-debugger",
+					"--no-reload",
+					"--host",
+					"0.0.0.0",
+					"--port",
+					"8081"
+				],
+				"module": "flask"
+			}
+		}
+	]
+}
