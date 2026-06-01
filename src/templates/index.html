@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,26 @@
 </head>
 <body>
     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-    <p>{{ fecha_hora }}</p>
+    <div class="container py-5">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h1 class="mb-4">Client info</h1>
+
+                <p class="fs-4">
+                    <strong>Your public ip:</strong> {{ ip_cliente }}
+                </p>
+
+                <p class="fs-4">
+                    <strong>Date and time:</strong> {{ fecha_hora }}
+                </p>
+
+                <hr>
+
+                <p class="text-muted">
+                    Page generated with Flask + Bootstrap
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>   

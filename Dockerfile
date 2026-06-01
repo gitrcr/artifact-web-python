@@ -1,31 +1,38 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.9-slim
-
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
+FROM python:3.9-slim AS builder
 
 WORKDIR /app
 
-# Install pip requirements
-COPY requirements.txt .
-
+# Instalar herramientas SOLO para compilar dependencias
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+# Instalar dependencias en un directorio aislado
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 COPY . /app
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
+
+# -----------------------------
+# Etapa 2: runtime DISTROLESS
+# -----------------------------
+FROM gcr.io/distroless/python3-debian12
+
+WORKDIR /app
+
+# Copiar dependencias ya compiladas
+COPY --from=builder /install /usr/local
+
+# Copiar solo el código
+COPY --from=builder /app /app
+
+# Distroless no tiene useradd → usar usuario por defecto no-root
+USER nonroot
 
 EXPOSE 8081
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["gunicorn", "--bind", "0.0.0.0:8081", "src.web:app"]
