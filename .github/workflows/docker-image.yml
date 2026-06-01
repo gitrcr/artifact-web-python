@@ -1,10 +1,10 @@
-name: Docker Image CI
+name: Docker Image CI Web Python
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'app/**'
+      - 'src/**'
 
 jobs:
 
