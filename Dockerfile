@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install pip requirements
-COPY ./app/requirements.txt .
+COPY requirements.txt .
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
@@ -28,4 +28,4 @@ USER appuser
 EXPOSE 8081
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:8081", "app.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8081", "src.web:app"]
