@@ -7,8 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
     <div class="container py-5">
+
+        <div class="text-center mb-4">
+            <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+        </div>
+
         <div class="card shadow-sm">
             <div class="card-body text-center">
                 <h1 class="mb-4">Client info</h1>
@@ -28,6 +32,7 @@
                 </p>
             </div>
         </div>
+
     </div>
 </body>
 </html>   
