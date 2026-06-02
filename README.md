@@ -9,3 +9,8 @@ CI/CD testing: ```.github\workflows\docker-image.yml ```
 DOCKERHUB_USERNAME with your docker-hub username
 DOCKERHUB_TOCKEN with the secret
 ```
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
