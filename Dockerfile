@@ -41,7 +41,7 @@ COPY . /app
 # RUN useradd -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 # USER appuser
 
-EXPOSE 8081
+EXPOSE 80
 
 ENV FLASK_RUN_HOST=0.0.0.0
 
