@@ -28,11 +28,11 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copiar solo el código
-COPY --from=builder ./src /app
+COPY --from=builder /app /app
 
 # Distroless no tiene useradd → usar usuario por defecto no-root
 USER nonroot
 
 EXPOSE 8081
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8081", "src.web:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8081", "web:app"]
