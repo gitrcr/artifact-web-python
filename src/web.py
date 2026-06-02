@@ -2,46 +2,57 @@ from flask import Flask, render_template, request
 from datetime import datetime
 import socket
 import os
-
+import platform
 
 app = Flask(__name__)
 
+def get_container_info():
+    """
+    Extrae información básica del sistema y del contenedor.
+    No requiere permisos especiales ni APIs externas.
+    """
+    hostname = socket.gethostname()
+    
+    try:
+        # Intenta obtener la IP privada resolviendo el hostname
+        private_ip = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        private_ip = "No disponible"
 
-from werkzeug.middleware.proxy_fix import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
+    return {
+        "hostname": hostname,          # Nombre del contenedor (o ID corto)
+        "private_ip": private_ip,      # IP interna (ej. 10.x.x.x)
+        "os_system": platform.system(), # Linux
+        "os_release": platform.release(),
+        "cpu_count": os.cpu_count(),   # Número de núcleos asignados
+        "python_version": platform.python_version()
+    }
 
 def get_client_ip():
     """
-    Obtiene la IP pública del cliente.
-    Prioriza X-Forwarded-For si existe,否则 usa remote_addr.
+    Obtiene la IP del cliente que hace la petición.
+    Nota: Si estás detrás de un proxy/NAT, esto mostrará la IP del proxy o interna.
     """
-    # request.remote_addr ya está corregido por ProxyFix, pero podemos ser explícitos:
-    if request.headers.get('X-Forwarded-For'):
-        # X-Forwarded-For puede tener varias IPs: "cliente, proxy1, proxy2"
-        # La primera es siempre la del cliente original.
-        return request.headers.get('X-Forwarded-For').split(',')[0].strip()
+    # Revisa cabeceras comunes por si hay un proxy delante
+    headers = ['X-Forwarded-For', 'X-Real-IP', 'CF-Connecting-IP']
+    for header in headers:
+        if header in request.headers:
+            return request.headers[header].split(',')[0].strip()
     return request.remote_addr
-
-
-def get_container_name():
-    """
-    Obtiene el nombre o ID del contenedor.
-    En Docker, el hostname por defecto es el ID corto del contenedor.
-    """
-    hostname = socket.gethostname()
-    # Opcional: Intentar leer el ID largo desde /etc/hostname o variables de entorno si se inyectan
-    container_id = os.environ.get('HOSTNAME', hostname)
-    return container_id
-
 
 @app.route('/')
 def index():
-    # Obtener fecha y hora actual
     fecha_hora = datetime.now().strftime('%d/%m/%Y, %H:%M:%S')
-    # Obtener IP del cliente
-    ip_cliente = get_client_ip()
-    container_name = get_container_name()
-    return render_template('index.html', fecha_hora=fecha_hora, ip_cliente=ip_cliente, container_name=container_name)
+    
+    # Datos para la plantilla
+    context = {
+        "fecha_hora": fecha_hora,
+        "client_ip": get_client_ip(),
+        "container": get_container_info()
+    }
+    
+    return render_template('index.html', **context)
 
 if __name__ == '__main__':    
+    # debug=True es útil para desarrollo, quítalo en producción real
     app.run(host='0.0.0.0', port=80, debug=True)   

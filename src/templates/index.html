@@ -1,42 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Web</title>
+    <title>Info del Contenedor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .card { border: 1px solid rgb(255, 255, 255); padding: 15px; border-radius: 8px; max-width: 600px; margin: 20px auto; }
+        .label { font-weight: normal; color: rgb(248, 160, 119); }
+    </style>
 </head>
 <body>
-    <div class="container py-5">
 
-        <div class="text-center mb-4">
+    <div class="text-center mb-4">
             <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-        </div>
-
-        <div class="card shadow-sm">
-            <div class="card-body text-center">
-                <h1 class="mb-4">Client info</h1>
-
-                <p class="fs-4">
-                    <strong>Your public ip:</strong> {{ ip_cliente }}
-                </p>
-
-                <p class="fs-4">
-                    <strong>Date + time:</strong> {{ fecha_hora }}
-                </p>
-
-                <p class="fs-4">
-                    <strong>Container name:</strong> {{ container_name }}
-                </p>
-
-                <hr>
-
-                <p class="text-muted">
-                    Page generated with Flask and Bootstrap
-                </p>
-            </div>
-        </div>
-
+    </div>
+    
+    <div class="card">
+        <h2>📊 Información del Sistema</h2>
+        <p><span class="label">Fecha y Hora:</span> {{ fecha_hora }}</p>
+        <p><span class="label">Tu IP (Cliente):</span> {{ client_ip }}</p>
+        <hr>
+        <h3>📦 Datos del Contenedor</h3>
+        <p><span class="label">Hostname:</span> {{ container.hostname }}</p>
+        <p><span class="label">IP Privada:</span> {{ container.private_ip }}</p>
+        <p><span class="label">Sistema Operativo:</span> {{ container.os_system }} ({{ container.os_release }})</p>
+        <p><span class="label">CPU Cores:</span> {{ container.cpu_count }}</p>
+        <p><span class="label">Python Version:</span> {{ container.python_version }}</p>
     </div>
 </body>
 </html>   
