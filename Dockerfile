@@ -28,7 +28,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copiar solo el código
-COPY --from=builder /src /app
+COPY --from=builder ./src /app
 
 # Distroless no tiene useradd → usar usuario por defecto no-root
 USER nonroot
