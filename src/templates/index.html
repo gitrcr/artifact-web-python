@@ -1,32 +1,38 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Info del Contenedor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .card { border: 1px solid rgb(255, 255, 255); padding: 15px; border-radius: 8px; max-width: 600px; margin: 20px auto; }
-        .label { font-weight: normal; color: rgb(248, 160, 119); }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Info</title>    
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <div class="container">        
+        <img src="/static/images/logo.png" alt="System Image">
+        
+        <h1>App Info</h1>
+        
+        <div class="info-item cli-section">
+            <span class="label"></span> {{ date_time }}
+        </div>
+        <div class="info-item">
+            <span class="label">id:</span> {{ container.hostname }}
+        </div>
+        <div class="info-item cli-section" style="margin-top: 10px; background-color: #eef2ff;">
+            private ip: {{ container.private_ip }}
+            <div style="font-size: 0.85rem; color: #777; margin-top: 4px;">
+                os: {{ container.os_system + " " + container.os_release }}  cpu: {{ container.cpu_count }}
+            </div>
+            <div style="font-size: 0.85rem; color: #777; margin-top: 4px;">
+                python version: {{ container.python_version }}
+            </div>
+        </div>
+        
+        <hr class="divider">
 
-    <div class="text-center mb-4">
-            <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-    </div>
-    
-    <div class="card">
-        <h2>📊 Información del Sistema</h2>
-        <p><span class="label">Fecha y Hora:</span> {{ fecha_hora }}</p>
-        <p><span class="label">Tu IP (Cliente):</span> {{ client_ip }}</p>
-        <hr>
-        <h3>📦 Datos del Contenedor</h3>
-        <p><span class="label">Hostname:</span> {{ container.hostname }}</p>
-        <p><span class="label">IP Privada:</span> {{ container.private_ip }}</p>
-        <p><span class="label">Sistema Operativo:</span> {{ container.os_system }} ({{ container.os_release }})</p>
-        <p><span class="label">CPU Cores:</span> {{ container.cpu_count }}</p>
-        <p><span class="label">Python Version:</span> {{ container.python_version }}</p>
+        <div class="info-item cli-section">
+            <span class="label">remote ip:</span> {{ client_ip }}
+        </div>
     </div>
 </body>
 </html>   

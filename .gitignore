@@ -11,5 +11,4 @@ tests
 .github
 docker-compose*.yml
 Dockerfile*
-!requirements.txt   
-!README.md
+!requirements.txt
